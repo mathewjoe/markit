@@ -21,6 +21,16 @@ router.use('/:id', function (req, res, next) {
 
 router.get('/', function (req, res, next) {
 	//list all bookmarks
+	bookmarks.find({organized : false}, function (err, result) {
+		if(!err)
+			res.json(result);
+		else
+			next(err)
+	})
+});
+
+router.get('/all', function (req, res, next) {
+	//list all bookmarks
 	bookmarks.find(function (err, result) {
 		if(!err)
 			res.json(result);

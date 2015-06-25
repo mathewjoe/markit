@@ -13,6 +13,17 @@
 		<div class="url">
 			<p>{{ bookmark.url }}</p>
 		</div>
+		<button ng-click="remove($index)">Delete</button>
+		<button ng-click="edit($index)" ng-hide="editing[$index]">Edit</button>
+		<input ng-model="bookmark.title" ng-show="editing[$index]">
+		<input ng-model="bookmark.url" ng-show="editing[$index]">
+		<button ng-click="update($index)" ng-show="editing[$index]">Update</button>
+		<button ng-click="cancel($index)" ng-show="editing[$index]">Cancel</button>
+		<div>Add to: 
+		<select>
+			<option ng-repeat="folder in folders">{{ folder.name }}</option>
+		</select>
+		</div>
 	</div>
 	<div class="folder" ng-repeat="folder in folders">
 		<div class="folderName">
