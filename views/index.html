@@ -4,7 +4,35 @@
 	<title>MarkIt! - A bookmark Web App</title>
 	<script type="text/javascript" src="js/vendor/angular.min.js"></script>
 </head>
-<body>
-<h1>Hello World</h1>
+<body ng-app="MarkIt">
+<div class="container" ng-controller="MainController">
+	<div class="bookmark" ng-repeat="bookmark in bookmarks">
+		<div class="title">
+			<h1>{{ bookmark.title }}</h1>
+		</div>
+		<div class="url">
+			<p>{{ bookmark.url }}</p>
+		</div>
+	</div>
+	<div class="folder" ng-repeat="folder in folders">
+		<div class="folderName">
+			<h1>{{ folder.name }}</h1>
+		</div>
+	</div>
+</div>
+
+<!-- Modules -->
+<script type="text/javascript" src="js/app.js"></script>
+
+<!-- Controllers -->
+<script type="text/javascript" src="js/controllers/MainController.js"></script>
+
+
+<!-- Directives -->
+
+
+<!-- Services -->
+<script type="text/javascript" src="js/services/bookmarks.js"></script>
+<script type="text/javascript" src="js/services/folders.js"></script>
 </body>
 </html>
