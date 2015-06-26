@@ -9,7 +9,8 @@ app.factory('folders', [ '$http', function ($http) {
 		new : function (newObj) {
 			return $http.post('/folders/',newObj);
 		},
-		update : function (modObj) {
+		update : function (modFolder) {
+			var modObj = angular.copy(modFolder);
 			var _id = modObj._id;
 			delete modObj._id;
 			return $http.put('/folders/'+_id, modObj);

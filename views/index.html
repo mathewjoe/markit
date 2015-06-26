@@ -3,40 +3,18 @@
 <head>
 	<title>MarkIt! - A bookmark Web App</title>
 	<script type="text/javascript" src="js/vendor/angular.min.js"></script>
+	<script type="text/javascript" src="js/vendor/angular-route.min.js"></script>
 </head>
-<body ng-app="MarkIt">
-<div class="container" ng-controller="MainController">
-	<div class="bookmark" ng-repeat="bookmark in bookmarks">
-		<div class="title">
-			<h1>{{ bookmark.title }}</h1>
-		</div>
-		<div class="url">
-			<p>{{ bookmark.url }}</p>
-		</div>
-		<button ng-click="remove($index)">Delete</button>
-		<button ng-click="edit($index)" ng-hide="editing[$index]">Edit</button>
-		<input ng-model="bookmark.title" ng-show="editing[$index]">
-		<input ng-model="bookmark.url" ng-show="editing[$index]">
-		<button ng-click="update($index)" ng-show="editing[$index]">Update</button>
-		<button ng-click="cancel($index)" ng-show="editing[$index]">Cancel</button>
-		<div>Add to: 
-		<select>
-			<option ng-repeat="folder in folders">{{ folder.name }}</option>
-		</select>
-		</div>
-	</div>
-	<div class="folder" ng-repeat="folder in folders">
-		<div class="folderName">
-			<h1>{{ folder.name }}</h1>
-		</div>
-	</div>
-</div>
+<body ng-app="MarkIt" ng-controller="MainController">
+
+<div ng-view></div>
 
 <!-- Modules -->
 <script type="text/javascript" src="js/app.js"></script>
 
 <!-- Controllers -->
 <script type="text/javascript" src="js/controllers/MainController.js"></script>
+<script type="text/javascript" src="js/controllers/FolderController.js"></script>
 
 
 <!-- Directives -->

@@ -31,12 +31,21 @@ router.get('/', function (req, res, next) {
 
 router.post('/', function (req, res, next) {
 	//create a new folder and respond with details of the folder created. Accept post parameters : name
-	folders.create(req.body, function (err, result) {
-		if(!err)
-			res.json(result);
-		else
-			next(err)
+	folders.find({ name : req.body.name }, function (err, result) {
+		if(result.length > 0){
+			var error = new Error('folder exists');
+			next(error);
+		}
+		else {
+			folders.create(req.body, function (err, result) {
+				if(!err)
+					res.json(result);
+				else
+					next(err)
+			})
+		}
 	})
+	
 });
 
 router.get('/:id', function (req, res, next) {

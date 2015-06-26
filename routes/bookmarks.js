@@ -4,6 +4,16 @@ var router = express.Router();
 //Retrieving models
 var bookmarks = require('../models/bookmark');
 
+router.get('/all', function (req, res, next) {
+	//list all bookmarks
+	bookmarks.find(function (err, result) {
+		if(!err)
+			res.json(result);
+		else
+			next(err)
+	})
+});
+
 router.use('/:id', function (req, res, next) {
 	//retrieve details of bookmark with given id from DB and attach it to the req object.
 	bookmarks.findById(req.params.id, function (err, bookmark) {
@@ -22,16 +32,6 @@ router.use('/:id', function (req, res, next) {
 router.get('/', function (req, res, next) {
 	//list all bookmarks
 	bookmarks.find({organized : false}, function (err, result) {
-		if(!err)
-			res.json(result);
-		else
-			next(err)
-	})
-});
-
-router.get('/all', function (req, res, next) {
-	//list all bookmarks
-	bookmarks.find(function (err, result) {
 		if(!err)
 			res.json(result);
 		else

@@ -1,0 +1,25 @@
+<h2>{{ folder.name }}</h2>
+<h2>Contents</h2>
+
+<div class="bookmarks">
+	<div class="bookmark" ng-repeat="bookmark in folder.bookmarks">
+		<div class="title">
+			<h1>{{ bookmark.title }}</h1>
+		</div>
+		<div class="url">
+			<p>{{ bookmark.url }}</p>
+		</div>
+		<button ng-click="remove($index)">Delete</button>
+		<button ng-click="edit($index)" ng-hide="editing[$index]">Edit</button>
+		<input ng-model="bookmark.title" ng-show="editing[$index]">
+		<input ng-model="bookmark.url" ng-show="editing[$index]">
+		<button ng-click="update($index)" ng-show="editing[$index]">Update</button>
+		<button ng-click="cancel($index)" ng-show="editing[$index]">Cancel</button>
+		<div>Move to: 
+		<select ng-change='moveToFolder($index, selectedFolder)' ng-model="selectedFolder" ng-options="currfolder.name for currfolder in folders">
+		<option value="">Choose another folder</option>
+		</select>
+		<button ng-click="removeFromFolder($index)">Remove from folder</button>
+		</div>
+	</div>
+</div>

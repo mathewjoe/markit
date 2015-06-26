@@ -1,0 +1,41 @@
+<h2>Add new bookmark</h2>
+<form name="addBookmarkForm">
+	<input type="text" ng-model="newBookmark.title">
+	<input type="url" ng-model="newBookmark.url">
+	<input type="submit" ng-click="save(newBookmark)">
+</form>
+<h2>Add new folder</h2>
+<form name="addFolderForm">
+	<input type="text" placeholder="Enter folder name" ng-model="newFolder.name">
+	<input type="submit" ng-click="saveFolder(newFolder)">
+</form>
+<div class="container">
+	<div class="bookmark" ng-repeat="bookmark in bookmarks">
+		<div class="title">
+			<h1>{{ bookmark.title }}</h1>
+		</div>
+		<div class="url">
+			<p>{{ bookmark.url }}</p>
+		</div>
+		<button ng-click="remove($index)">Delete</button>
+		<button ng-click="edit($index)" ng-hide="editing[$index]">Edit</button>
+		<input ng-model="bookmark.title" ng-show="editing[$index]">
+		<input ng-model="bookmark.url" ng-show="editing[$index]">
+		<button ng-click="update($index)" ng-show="editing[$index]">Update</button>
+		<button ng-click="cancel($index)" ng-show="editing[$index]">Cancel</button>
+		<div>Add to: 
+		<select ng-change='addToFolder($index, selectedFolder)' ng-model="selectedFolder" ng-options="folder.name for folder in folders">
+		</select>
+		</div>
+	</div>
+	<div class="folder" ng-repeat="folder in folders">
+		<div class="folderName">
+			<a ng-href="#/folder/{{folder._id}}"><h1>{{ folder.name }}</h1></a>
+			<button ng-click="removeFolder($index)">Delete</button>
+			<h2>Contents</h2>
+			<ul>
+				<li ng-repeat="bm in folder.bookmarks">{{ bm.title }}<a ng-href="bm.url">{{ bm.url }}</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
