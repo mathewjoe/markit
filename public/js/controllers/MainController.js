@@ -1,4 +1,7 @@
-app.controller('MainController', [ '$scope', 'bookmarks', 'folders', function ($scope, bookmarks, folders) {
+app.controller('MainController', [ '$scope', '$rootScope', 'bookmarks', 'folders', function ($scope, $rootScope, bookmarks, folders) {
+	
+	$('.modals').remove();
+
 	bookmarks.get().success(function (data) {
 		$scope.bookmarks = data;
 	});
@@ -6,17 +9,32 @@ app.controller('MainController', [ '$scope', 'bookmarks', 'folders', function ($
 		$scope.folders = data;
 	})
 	$scope.editing = [];
+	$scope.editingFolder = [];
+	$scope.moving = [];
+	$scope.bmodal = "bmodal";
+	$scope.fmodal = "fmodal";
+	$rootScope.mainView = true;
+	$rootScope.currentFolderName = false;
+
+	$scope.toggleMoving = function (index) {
+		if(typeof $scope.moving[index] === 'undefined')
+			$scope.moving[index] = true;
+		else
+			$scope.moving[index] = !$scope.moving[index]
+	}
 	$scope.edit = function (index) {
 		$scope.editing[index] = angular.copy($scope.bookmarks[index])
+		$('.ui.modal.'+$scope.bmodal+index).modal('show');
 	}
 	$scope.cancel = function (index) {
-		$scope.bookmarks[index] = $scope.editing[index];
-		$scope.editing[index] = false;
+		var restoreObj = $scope.editing[index];
+		$scope.bookmarks[index].title = restoreObj.title;
+		$scope.bookmarks[index].url = restoreObj.url;
 	}
 	$scope.update = function (index) {
 		bookmarks.update($scope.bookmarks[index]).success(function (res) {
 			if(!res.error){
-				$scope.editing[index] = false;
+				// $scope.editing[index] = false;
 				console.log("update success");
 			}
 		});
@@ -29,21 +47,33 @@ app.controller('MainController', [ '$scope', 'bookmarks', 'folders', function ($
 			}
 		})
 	}
-	$scope.save = function (bookmark) {
+
+	//Adding new bookmarks
+	$rootScope.addNew = function (type) {
+		$('.new'+type).modal('show');
+	}
+
+	$rootScope.save = function (bookmark) {
+		//Saving new bookmarks
+		if(!bookmark)
+			return;
 		bookmarks.new(bookmark).success(function (res) {
 			if(!res.error && res._id){
 				$scope.bookmarks.push(res);
 				console.log("new bookmark added")
-				$scope.newBookmark = {}
+				$rootScope.newBookmark = {}
 			}
 		});
 	}
-	$scope.saveFolder = function (folder) {
+	$rootScope.saveFolder = function (folder) {
+		//Saving new folder
+		if(!folder)
+			return;
 		folders.new(folder).success(function (res) {
 			if(!res.error && res._id){
 				$scope.folders.push(res);
 				console.log("new folder added")
-				$scope.newFolder = {}
+				$rootScope.newFolder = {}
 			}
 		})
 		.error(function(err) {
@@ -63,6 +93,7 @@ app.controller('MainController', [ '$scope', 'bookmarks', 'folders', function ($
 				folder.bookmarks.push(currentBookmark);
 				folders.update(folder).success(function (res) {
 					if(!res.error) {
+						$scope.moving[index] = !$scope.moving[index];
 						console.log('added to folder successfully')
 					}
 				})
@@ -73,9 +104,48 @@ app.controller('MainController', [ '$scope', 'bookmarks', 'folders', function ($
 	$scope.removeFolder = function (index) {
 		folders.delete($scope.folders[index]).success(function (res) {
 			$scope.folders.splice(index, 1);
+			console.log('folder deleted successfully')
 		})
 		.error(function (err) {
 			console.error(err);
 		})
 	}
+
+	$scope.editFolder = function (index) {
+		$scope.editingFolder[index] = angular.copy($scope.folders[index])
+		$('.ui.modal.fmodal'+index).modal('show');
+	}
+
+	$scope.cancelEditFolder = function (index) {
+		var restoreObj = $scope.editingFolder[index];
+		$scope.folders[index].name = restoreObj.name;
+	}
+
+	$scope.updateFolder = function (folder) {
+		if(!folder)
+			return;
+		folders.update(folder).then(function (res) {
+			console.log('updated folder successfully');
+		})
+		.catch(function (err) {
+			// Error while updating at server, rolling back model to previous value
+			$scope.folders[index].name = $scope.editingFolder[index].name;
+			console.error('update folder failed')
+			console.error(err);
+		})
+	}
+
+	$scope.$on('$viewContentLoaded', function () {
+		//callTimeout();
+	})
 } ])
+
+//To be removed
+function callTimeout() {
+	setTimeout(function () {
+		console.log("timed out")
+		$('.ui.dimmable').dimmer({
+			on : 'hover'
+		})
+	}, 500);
+}

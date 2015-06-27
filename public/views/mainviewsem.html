@@ -1,0 +1,139 @@
+<div class="ui vertically padded page grid">
+<div class="column">
+<div class="ui doubling five cards">
+	<div class="ui card bookmark" ng-repeat="bookmark in bookmarks">
+		<div class="ui content dimmable">
+			<div class="ui dimmer">
+				<div class="content">
+					<div class="center">
+						<div class="ui inverted button"><a ng-href="{{ bookmark.url }}" target="_blank">Open</a></div>
+					</div>
+				</div>
+			</div>
+			<div class="header">
+			<i class="bookmark circular icon"></i>
+				{{ bookmark.title }}
+			</div>
+			<div class="description">
+				{{ bookmark.url }}
+			</div>
+		</div>
+		
+		<!-- <div class="extra content">
+			<span class="left floated">
+				<i class="folder icon"></i>Move to folder 
+			</span>
+			<span class="right floated">
+				<i class="trash icon"></i>Delete bookmark
+			</span>
+		</div> -->
+		<div class="ui attached three buttons">
+			<div class="ui button" ng-click="toggleMoving($index)">
+				<i class="folder icon"></i> 
+			</div>
+			<div class="ui button" ng-click="edit($index)">
+				<i class="edit icon"></i>
+			</div>
+			<div class="ui button" ng-click="remove($index)">
+				<i class="trash icon"></i>
+			</div>
+		</div>
+		<select class="ui dropdown bottom attached" ng-change='addToFolder($index, selectedFolder)' ng-model="selectedFolder" ng-options="folder.name for folder in folders" ng-show="moving[$index]">
+		<option value="">Move to folder</option>
+		</select>
+		<!-- <button ng-click="remove($index)">Delete</button>
+		<button ng-click="edit($index)" ng-hide="editing[$index]">Edit</button>
+		<input ng-model="bookmark.title" ng-show="editing[$index]">
+		<input ng-model="bookmark.url" ng-show="editing[$index]">
+		<button ng-click="update($index)" ng-show="editing[$index]">Update</button>
+		<button ng-click="cancel($index)" ng-show="editing[$index]">Cancel</button>
+		<div>Add to: 
+		<select ng-change='addToFolder($index, selectedFolder)' ng-model="selectedFolder" ng-options="folder.name for folder in folders">
+		</select>
+		</div> -->
+		<!-- Edit Bookmark Modal -->
+		<div class="ui modal small" ng-class="bmodal + $index">
+			<i class="close icon"></i>
+			  <div class="header">
+			    <i class="edit icon"></i>Edit Bookmark
+			  </div>
+			  <div class="content">
+			    <!-- Edit Form -->
+			    <div class="ui form">
+			    	<div class="field">
+			    		<label>Bookmark Title</label>
+			    		<input type="text" ng-model="bookmark.title" placeholder="Enter bookmark title">
+			    	</div>
+			    	<div class="field">
+			    		<label>Bookmark URL</label>
+			    		<input type="text" ng-model="bookmark.url" placeholder="Enter bookmark url">
+			    	</div>
+			    </div>
+			  </div>
+			  <div class="actions">
+			    <div class="ui button deny" ng-click="cancel($index)">Cancel</div>
+			    <div class="ui button approve" ng-click="update($index)">OK</div>
+
+			  </div>
+		</div>
+	</div>
+	<!-- <div class="folder" ng-repeat="folder in folders">
+		<div class="folderName">
+			<a ng-href="#/folder/{{folder._id}}"><h1>{{ folder.name }}</h1></a>
+			<button ng-click="removeFolder($index)">Delete</button>
+			<h2>Contents</h2>
+			<ul>
+				<li ng-repeat="bm in folder.bookmarks">{{ bm.title }}<a ng-href="bm.url">{{ bm.url }}</a></li>
+			</ul>
+		</div>
+	</div> -->
+	<div class="ui black card folder" ng-repeat="folder in folders">
+		<div class="ui floating teal label">{{ folder.bookmarks.length }}</div>
+		<div class="ui content dimmable">
+			<div class="ui dimmer">
+				<div class="content">
+					<div class="center">
+						<div class="ui inverted button"><a ng-href="#/folder/{{ folder._id }}">Open Folder</a></div>
+					</div>
+				</div>
+			</div>
+			<div class="header"></div>
+			<div class="description center aligned">
+				<i class="folder large circular icon"></i><div class="ui large header">{{folder.name}}</div>
+			</div>
+		</div>
+		<div class="ui bottom attached two buttons">
+			<div class="ui button" ng-click="editFolder($index)">
+				<i class="edit icon"></i>
+			</div>
+			<div class="ui button" ng-click="removeFolder($index)">
+				<i class="trash icon"></i>
+			</div>
+		</div>
+		<!-- Edit Folder modal -->
+		<div class="ui modal small" ng-class="fmodal + $index">
+			<i class="close icon"></i>
+			  <div class="header">
+			    <i class="edit icon"></i>Edit Folder
+			  </div>
+			  <div class="content">
+			    <!-- Edit Form -->
+			    <div class="ui form">
+			    	<div class="field">
+			    		<label>Folder Name</label>
+			    		<input type="text" ng-model="folder.name" placeholder="Enter folder name">
+			    	</div>
+			    </div>
+			  </div>
+			  <div class="actions">
+			    <div class="ui button deny" ng-click="cancelEditFolder($index)">Cancel</div>
+			    <div class="ui button approve" ng-click="updateFolder(folder)">OK</div>
+
+			  </div>
+		</div>
+	</div>
+</div>
+</div>
+</div>
+
+<!-- SemanticUI Scripts -->

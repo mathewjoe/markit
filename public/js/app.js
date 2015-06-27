@@ -3,11 +3,11 @@ var app = angular.module('MarkIt', ['ngRoute']);
 app.config(function ($routeProvider) {
 	$routeProvider.when('/', {
 		controller : 'MainController',
-		templateUrl : 'views/MainView.html'
+		templateUrl : 'views/mainviewsem.html'
 	})
 	.when('/folder/:id',{
 		controller : 'FolderController',
-		templateUrl : 'views/FolderView.html'
+		templateUrl : 'views/folderviewsem.html'
 	})
 	.otherwise({
 		redirectTo : '/'

@@ -11,5 +11,9 @@ router.get('/', function (req, res, next) {
 	res.sendFile(path.join(__dirname + '/../views/index.html'));
 })
 
+router.get('/test', function (req, res, next) {
+	res.sendFile(path.join(__dirname + '/../views/test.html'));
+})
+
 
 module.exports = router;

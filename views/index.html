@@ -2,12 +2,85 @@
 <html>
 <head>
 	<title>MarkIt! - A bookmark Web App</title>
+	<link rel="stylesheet" type="text/css" href="css/semantic.min.css">
+	<script type="text/javascript" src="js/vendor/jquery.js"></script>
+	<script type="text/javascript" src="js/vendor/semantic.min.js"></script>
 	<script type="text/javascript" src="js/vendor/angular.min.js"></script>
 	<script type="text/javascript" src="js/vendor/angular-route.min.js"></script>
 </head>
-<body ng-app="MarkIt" ng-controller="MainController">
+<body ng-app="MarkIt">
+<div class="ui vertical segment">
+	<div class="ui page grid">
+		<div class="column">
+			<div class="two column grid">
+				<div class="left floated column">
+					<a href="/#/"><h1 class="ui header">MarkIt!</h1></a>
+				</div>
+				<div class="right floated column">
+					<div class="ui basic buttons" ng-show="mainView">
+						<div class="ui button" ng-click="addNew('bookmark')">
+							<i class="bookmark icon"></i>Add New Bookmark
+						</div>
+						<div class="ui button" ng-click="addNew('folder')">
+							<i class="folder icon"></i>Add New Folder
+						</div>
+					</div>					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
-<div ng-view></div>
+	<div ng-view></div>
+
+	<!-- Modals -->
+	<!-- new bookmark form modal -->
+	<div class="ui modal small newbookmark">
+		<i class="close icon"></i>
+		  <div class="header">
+		    <i class="bookmark icon"></i>Add New Bookmark
+		  </div>
+		  <div class="content">
+		    <!-- New Bookmark Form -->
+		    <div class="ui form">
+		    	<div class="field">
+		    		<label>Bookmark Title</label>
+		    		<input type="text" ng-model="newBookmark.title" placeholder="Enter bookmark title">
+		    	</div>
+		    	<div class="field">
+		    		<label>Bookmark URL</label>
+		    		<input type="text" ng-model="newBookmark.url" placeholder="Enter bookmark url">
+		    	</div>
+		    </div>
+		  </div>
+		  <div class="actions">
+		    <div class="ui button deny" ng-click="newBookmark={}">Cancel</div>
+		    <div class="ui button approve" ng-click="save(newBookmark)">OK</div>
+
+		  </div>
+	</div>
+
+	<!-- new folder form modal -->
+	<div class="ui modal small newfolder">
+		<i class="close icon"></i>
+		  <div class="header">
+		    <i class="folder icon"></i>Add New Folder
+		  </div>
+		  <div class="content">
+		    <!-- New Folder Form -->
+		    <div class="ui form">
+		    	<div class="field">
+		    		<label>Folder Name</label>
+		    		<input type="text" ng-model="newFolder.name" placeholder="Enter folder name">
+		    	</div>
+		    </div>
+		  </div>
+		  <div class="actions">
+		    <div class="ui button deny" ng-click="newFolder={}">Cancel</div>
+		    <div class="ui button approve" ng-click="saveFolder(newFolder)">OK</div>
+
+		  </div>
+	</div>
 
 <!-- Modules -->
 <script type="text/javascript" src="js/app.js"></script>
@@ -18,7 +91,7 @@
 
 
 <!-- Directives -->
-
+<script type="text/javascript" src="js/directives/semantic-directives.js"></script>
 
 <!-- Services -->
 <script type="text/javascript" src="js/services/bookmarks.js"></script>

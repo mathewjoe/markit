@@ -3,6 +3,7 @@ var router = express.Router();
 
 //Retrieving models
 var folders = require('../models/folder');
+var bookmarks = require('../models/bookmark');
 
 router.use('/:id', function (req, res, next) {
 	//retrieve details of folder with given id from DB and attach it to the req object.
@@ -67,8 +68,19 @@ router.put('/:id', function (req, res, next) {
 router.delete('/:id', function (req, res, next) {
 	//Delete folder from DB
 	folders.findByIdAndRemove(req.params.id, function (err, result) {
-		if(!err)
-			res.json(result)
+		if(!err) {
+			var delCount = 0;
+			result.bookmarks.forEach(function (bookmark) {
+				bookmarks.findByIdAndRemove(bookmark.id, function (err, bm) {
+					if(!err)
+						delCount+=1;
+					else
+						next(err);
+				})
+			})
+			// if(delCount === result.bookmarks.length)
+				res.json(result)
+		}
 		else
 			next(err)
 	})
