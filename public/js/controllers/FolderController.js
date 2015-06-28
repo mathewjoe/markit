@@ -1,5 +1,8 @@
 app.controller('FolderController', ['$scope', '$rootScope', '$routeParams', 'bookmarks', 'folders', function ($scope, $rootScope, $routeParams, bookmarks, folders) {
-	
+
+	// Removing modals registered with previous view
+	$('.currviewmodal').remove();
+
 	// Using services : Retrieving current folder and other folders from DB
 	folders.get($routeParams.id).success(function (res) {
 		if(!res.error){
@@ -20,11 +23,21 @@ app.controller('FolderController', ['$scope', '$rootScope', '$routeParams', 'boo
 	// Scope Variables
 	$scope.editing = []
 	$scope.moving = [];
+	$scope.loadingBookmark = [];
 	$rootScope.mainView = false;
 
 	function initializations () {
 	$scope.bmodal = "bmodal"+$scope.folder._id;
 	$scope.fmodal = "fmodal"+$scope.folder._id;	
+	$rootScope.currentFolderName = $scope.folder.name;
+	}
+
+	// Helper functions
+	function toggleLoading (arr, index) {
+		if(typeof arr[index] === 'undefined')
+			arr[index] = true;
+		else
+			arr[index] = !arr[index]
 	}
 
 	// Scope methods
@@ -42,18 +55,13 @@ app.controller('FolderController', ['$scope', '$rootScope', '$routeParams', 'boo
 		var restoreObj = $scope.editing[index];
 		$scope.folder.bookmarks[index].title = restoreObj.title;
 		$scope.folder.bookmarks[index].url = restoreObj.url;
-		// $scope.editing[index] = false;
 	}
 	$scope.update = function (index) {
-		// bookmarks.update($scope.folder.bookmarks[index]).success(function (res) {
-		// 	if(!res.error){
-		// 		$scope.editing[index] = false;
-		// 		console.log("update success");
-		// 	}
-		// });
 		//Update folder, then update bookmark collection
+		toggleLoading($scope.loadingBookmark, index);
 		folders.update($scope.folder)
 		.then(function (res) {
+			toggleLoading($scope.loadingBookmark, index);
 			$scope.editing[index] = false;
 			console.log('update folder success');
 			return bookmarks.update($scope.folder.bookmarks[index])
@@ -66,12 +74,15 @@ app.controller('FolderController', ['$scope', '$rootScope', '$routeParams', 'boo
 		})
 	}
 	$scope.remove = function (index) {
+		toggleLoading($scope.loadingBookmark, index);
 		var folder = angular.copy($scope.folder);
 		var bookmark = folder.bookmarks.splice(index, 1)[0];
 		folders.update(folder).then(function (res) {
 			return bookmarks.delete(bookmark)
 		})
 		.then(function (res) {
+			toggleLoading($scope.loadingBookmark, index);
+			$('.'+$scope.bmodal+index).remove();
 			$scope.folder.bookmarks.splice(index, 1);
 			console.log('bookmark removed successfully');
 		})
@@ -80,6 +91,7 @@ app.controller('FolderController', ['$scope', '$rootScope', '$routeParams', 'boo
 		})
 	}
 	$scope.moveToFolder = function (index, folder) {
+			toggleLoading($scope.loadingBookmark, index);
 			var currentBookmark = $scope.folder.bookmarks[index]
 			var currFolder = angular.copy($scope.folder);
 			currFolder.bookmarks.splice(index, 1);
@@ -90,6 +102,7 @@ app.controller('FolderController', ['$scope', '$rootScope', '$routeParams', 'boo
 				return folders.update(folder);
 			})
 			.then(function (res) {
+				toggleLoading($scope.loadingBookmark, index);
 				console.log('moved to folder successfully');
 			})
 			.catch(function (err) {
@@ -97,6 +110,7 @@ app.controller('FolderController', ['$scope', '$rootScope', '$routeParams', 'boo
 			})
 		}
 	$scope.removeFromFolder = function (index) {
+		toggleLoading($scope.loadingBookmark, index);
 		var currentBookmark = angular.copy($scope.folder.bookmarks[index]);
 		currentBookmark.organized = false;
 		//Update bookmarks collection (set organized:false) , then update folder (remove from bookmarks[] of folder)
@@ -106,6 +120,7 @@ app.controller('FolderController', ['$scope', '$rootScope', '$routeParams', 'boo
 			return folders.update(folder)
 		})
 		.then(function (res) {
+			toggleLoading($scope.loadingBookmark, index);
 			$scope.folder.bookmarks.splice(index, 1);
 			console.log("removed from folder successfully");
 		})
@@ -113,4 +128,5 @@ app.controller('FolderController', ['$scope', '$rootScope', '$routeParams', 'boo
 			console.error(err);
 		})
 	}
+
 }])

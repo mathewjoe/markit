@@ -1,25 +1,62 @@
-<h2>{{ folder.name }}</h2>
-<h2>Contents</h2>
-
-<div class="bookmarks">
-	<div class="bookmark" ng-repeat="bookmark in folder.bookmarks">
-		<div class="title">
-			<h1>{{ bookmark.title }}</h1>
+<div class="ui vertically padded page grid" ng-cloak>
+<div class="column">
+<div class="ui doubling five cards">
+	<div class="ui card bookmark" ng-repeat="bookmark in folder.bookmarks">
+		<div class="ui dimmer" ng-class="{'active' : loadingBookmark[$index]}">
+			<div class="ui loader"></div>
 		</div>
-		<div class="url">
-			<p>{{ bookmark.url }}</p>
+		<div class="ui content dimmable">
+			<div class="ui dimmer">
+				<div class="content">
+					<div class="center">
+						<a ng-href="{{ bookmark.url }}" target="_blank"><div class="ui inverted button">Open</div></a>
+					</div>
+				</div>
+			</div>
+			<div class="header">
+			<i class="bookmark circular icon breakword"></i>
+				{{ bookmark.title }}
+			</div>
+			<div class="description breakword">
+				{{ bookmark.url }}
+			</div>
 		</div>
-		<button ng-click="remove($index)">Delete</button>
-		<button ng-click="edit($index)" ng-hide="editing[$index]">Edit</button>
-		<input ng-model="bookmark.title" ng-show="editing[$index]">
-		<input ng-model="bookmark.url" ng-show="editing[$index]">
-		<button ng-click="update($index)" ng-show="editing[$index]">Update</button>
-		<button ng-click="cancel($index)" ng-show="editing[$index]">Cancel</button>
-		<div>Move to: 
-		<select ng-change='moveToFolder($index, selectedFolder)' ng-model="selectedFolder" ng-options="currfolder.name for currfolder in folders">
-		<option value="">Choose another folder</option>
+		<div class="ui attached three buttons">
+			<div class="ui button" ng-click="toggleMoving($index)">
+				<i class="folder icon"></i> 
+			</div>
+			<div class="ui button" ng-click="edit($index)">
+				<i class="edit icon"></i>
+			</div>
+			<div class="ui button" ng-click="remove($index)">
+				<i class="trash icon"></i>
+			</div>
+		</div>
+		<select class="ui dropdown bottom attached" ng-change='moveToFolder($index, selectedFolder)' ng-model="selectedFolder" ng-options="folder.name for folder in folders" ng-show="moving[$index]">
+		<option value="">Move to folder</option>
 		</select>
-		<button ng-click="removeFromFolder($index)">Remove from folder</button>
+		<!-- Edit Bookmark Modal -->
+		<div class="ui modal small currviewmodal" ng-class="bmodal + $index">
+			<i class="close icon"></i>
+			  <div class="header">
+			    <i class="edit icon"></i>Edit Bookmark
+			  </div>
+			  <div class="content">
+			    <!-- Edit Form -->
+			    <div class="ui form">
+			    	<div class="field">
+			    		<label>Bookmark Title</label>
+			    		<input type="text" ng-model="bookmark.title" placeholder="Enter bookmark title">
+			    	</div>
+			    	<div class="field">
+			    		<label>Bookmark URL</label>
+			    		<input type="text" ng-model="bookmark.url" placeholder="Enter bookmark url">
+			    	</div>
+			    </div>
+			  </div>
+			  <div class="actions">
+			    <div class="ui button deny" ng-click="cancel($index)">Cancel</div>
+			    <div class="ui button approve" ng-click="update($index)">OK</div>
+			  </div>
 		</div>
 	</div>
-</div>

@@ -41,6 +41,7 @@ router.get('/', function (req, res, next) {
 
 router.post('/', function (req, res, next) {
 	//create a new bookmark and respond with details of the bookmark created. Accept post parameters : title, url
+	req.body.url = 'http://' + (req.body.url || '')
 	bookmarks.create(req.body, function (err, result) {
 		if(!err)
 			res.json(result);

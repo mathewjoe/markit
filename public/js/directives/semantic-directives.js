@@ -21,6 +21,18 @@ app.directive('modal', function () {
 	}
 })
 
+app.directive('topbuttons', function () {
+	return{
+		restrict: 'C',
+		link: function (scope, element, attrs) {
+			element.transition({
+				animation : 'jiggle',
+				duration  : 800,
+				interval  : 200				
+			})
+		}
+	}
+})
 // app.directive('dropdown', function () {
 // 	return {
 // 		restrict : 'C',
