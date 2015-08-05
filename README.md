@@ -1,4 +1,4 @@
-#markit
+#markit 
 A bookmark manager web app built using NodeJS, Express, MongoDB (Mongoose), AngularJS and SemanticUI
 
 ##Steps to install locally (assuming you have NodeJS, npm and MongoDB installed): 
@@ -6,3 +6,5 @@ A bookmark manager web app built using NodeJS, Express, MongoDB (Mongoose), Angu
 - `cd` into the directory
 - Run `npm install` to install dependencies
 - Run `npm start` to run the app
+
+Demo : [markitnow.herokuapp.com](http://markitnow.herokuapp.com)
